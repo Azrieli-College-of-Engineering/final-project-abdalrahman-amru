@@ -26,5 +26,11 @@ CREATE TABLE "notes" (
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_hash_key" ON "users"("username_hash");
+
+-- CreateIndex
+CREATE INDEX "notes_user_id_idx" ON "notes"("user_id");
+
 -- AddForeignKey
 ALTER TABLE "notes" ADD CONSTRAINT "notes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

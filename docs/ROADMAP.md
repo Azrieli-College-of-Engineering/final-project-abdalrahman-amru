@@ -192,10 +192,10 @@ export function generateSalt(length = 16) {
 ### Day 3: Core Crypto (Part 2) - Encryption/Decryption
 
 **Tasks:**
-- [ ] Implement AES-256-GCM encryption function
-- [ ] Implement AES-256-GCM decryption function
-- [ ] Create simple test page to validate crypto
-- [ ] Test round-trip encryption/decryption
+- [x] Implement AES-256-GCM encryption function
+- [x] Implement AES-256-GCM decryption function
+- [x] Create simple test page to validate crypto
+- [x] Test round-trip encryption/decryption
 
 **Encryption/Decryption Functions:**
 ```javascript
