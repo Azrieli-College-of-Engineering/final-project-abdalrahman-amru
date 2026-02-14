@@ -1,10 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
+const { Pool } = require('pg');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 // Security middleware
 app.use(helmet({
@@ -49,6 +55,24 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Database health check endpoint
+app.get('/db-health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({
+      status: 'OK',
+      database: 'connected',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'ERROR',
+      database: 'disconnected',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
@@ -71,8 +95,32 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+
+const startServer = async () => {
+  try {
+    await prisma.$connect();
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+      console.log(`🗄️  DB check: http://localhost:${PORT}/db-health`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to connect to the database:', error);
+    process.exit(1);
+  }
+};
+
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
+  await pool.end();
+  process.exit(0);
 });
+
+process.on('SIGTERM', async () => {
+  await prisma.$disconnect();
+  await pool.end();
+  process.exit(0);
+});
+
+startServer();
