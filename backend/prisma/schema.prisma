@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  usernameHash      String    @map("username_hash")
+  passwordVerifier  String    @map("password_verifier")
+  saltLogin         String    @map("salt_login")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  notes             Note[]
+
+  @@map("users")
+}
+
+model Note {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  ciphertext String    @db.Text
+  iv         String    @db.VarChar(255)
+  authTag    String    @map("auth_tag") @db.VarChar(255)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
