@@ -19,7 +19,7 @@ export function base64ToArrayBuffer(base64: string): ArrayBuffer {
 }
 
 // Derive encryption key from password using PBKDF2
-export async function deriveKey(password: string, salt: Uint8Array, iterations: number = 100000): Promise<CryptoKey> {
+export async function deriveKey(password: string, salt: Uint8Array, iterations: number = 100000, extractable: boolean = false): Promise<CryptoKey> {
   const encoder = new TextEncoder();
 
   const passwordKey = await crypto.subtle.importKey(
@@ -39,7 +39,7 @@ export async function deriveKey(password: string, salt: Uint8Array, iterations: 
     },
     passwordKey,
     { name: 'AES-GCM', length: 256 },
-    false,
+    extractable,
     ['encrypt', 'decrypt']
   );
 
@@ -58,14 +58,14 @@ export interface EncryptedData {
 }
 
 // Encrypt plaintext note
-export async function encryptNote(plaintext: string, key: CryptoKey, userId: number, noteId: number): Promise<EncryptedData> {
+export async function encryptNote(plaintext: string, key: CryptoKey, userId: number): Promise<EncryptedData> {
   const encoder = new TextEncoder();
   
   // Generate random IV (12 bytes for GCM)
   const iv = crypto.getRandomValues(new Uint8Array(12));
   
-  // Prepare Additional Authenticated Data
-  const aad = encoder.encode(JSON.stringify({ userId, noteId }));
+  // Prepare Additional Authenticated Data (only userId to avoid noteId mismatch on new notes)
+  const aad = encoder.encode(JSON.stringify({ userId }));
   
   // Encrypt
   const ciphertext = await crypto.subtle.encrypt(
@@ -91,14 +91,14 @@ export async function encryptNote(plaintext: string, key: CryptoKey, userId: num
 }
 
 // Decrypt encrypted note
-export async function decryptNote(encryptedData: EncryptedData, key: CryptoKey, userId: number, noteId: number): Promise<string> {
+export async function decryptNote(encryptedData: EncryptedData, key: CryptoKey, userId: number): Promise<string> {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   
   const { ciphertext, iv, authTag } = encryptedData;
   
   // Reconstruct AAD (must match encryption)
-  const aad = encoder.encode(JSON.stringify({ userId, noteId }));
+  const aad = encoder.encode(JSON.stringify({ userId }));
   
   // Concatenate ciphertext + auth tag
   const ciphertextBuffer = base64ToArrayBuffer(ciphertext);

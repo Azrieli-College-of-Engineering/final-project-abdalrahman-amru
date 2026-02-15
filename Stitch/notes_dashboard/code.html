@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Notes Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0b5ed7",
+                        "accent-teal": "#14b8a6", // Teal for the 'New Note' button as requested
+                        "accent-teal-hover": "#0d9488",
+                        "background-light": "#f8fafc", // Slightly cooler gray for 'clinical' feel
+                        "background-dark": "#0f172a", // Slate-900 for dark mode
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e293b",
+                        "text-main-light": "#111418",
+                        "text-main-dark": "#f1f5f9",
+                        "text-sub-light": "#64748b",
+                        "text-sub-dark": "#94a3b8",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-text-main-light dark:text-text-main-dark transition-colors duration-200">
+<!-- Top Navigation Bar -->
+<nav class="sticky top-0 z-50 w-full bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark px-6 py-3 shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<!-- Logo Section -->
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary dark:bg-primary/20">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-text-main-light dark:text-text-main-dark">Secure Notes</h1>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-6">
+<a class="hidden md:flex items-center gap-2 text-sm font-medium text-text-sub-light dark:text-text-sub-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">security</span>
+                    Security Demo
+                </a>
+<div class="h-6 w-px bg-border-light dark:bg-border-dark hidden md:block"></div>
+<button class="group flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+<span class="text-sm font-semibold hidden sm:block">John Doe</span>
+<div class="size-9 rounded-full bg-gradient-to-br from-primary to-accent-teal flex items-center justify-center text-white shadow-sm ring-2 ring-white dark:ring-background-dark group-hover:ring-primary/30 transition-all">
+<span class="text-sm font-bold">JD</span>
+</div>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
+<!-- Header & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+<div>
+<h2 class="text-3xl font-black tracking-tight text-text-main-light dark:text-text-main-dark mb-1">My Secure Notes</h2>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm">Your private vault is synced and up to date.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-accent-teal hover:bg-accent-teal-hover text-white px-5 py-2.5 rounded-lg shadow-md shadow-accent-teal/20 transition-all active:scale-95 font-semibold text-sm">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Note
+            </button>
+</div>
+<!-- Search Bar -->
+<div class="mb-8 max-w-2xl">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-sub-light dark:text-text-sub-dark group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full pl-10 pr-4 py-3 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl text-text-main-light dark:text-text-main-dark placeholder-text-sub-light dark:placeholder-text-sub-dark focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm" placeholder="Search encrypted notes..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+<kbd class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-xs text-text-sub-light dark:text-text-sub-dark font-medium">
+                        ⌘ K
+                    </kbd>
+</div>
+</div>
+</div>
+<!-- Grid of Notes -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-5 shadow-sm hover:shadow-md hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-200 cursor-pointer flex flex-col h-[200px]">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-teal text-[18px]" title="Encrypted">lock</span>
+<h3 class="font-bold text-lg text-text-main-light dark:text-text-main-dark truncate">Project Alpha Keys</h3>
+</div>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm leading-relaxed line-clamp-3 flex-1">
+                    recovery-phrase-01: apple banana cherry date elderberry fig grape honeydew... 
+                    <span class="blur-[2px] opacity-60 select-none"> kiwi lemon mango nectarine orange papaya quince raspberry strawberry tangerine ugli vanilla watermelon xigua yuzu zucchini </span>
+</p>
+<div class="mt-4 pt-4 border-t border-border-light/50 dark:border-border-dark/50 flex items-center justify-between">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Modified 2h ago</span>
+<button class="p-1 rounded-md text-text-sub-light dark:text-text-sub-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Card 2 (With Active Menu) -->
+<div class="relative bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col h-[200px] ring-2 ring-primary/10 dark:ring-primary/20">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-teal text-[18px]" title="Encrypted">lock</span>
+<h3 class="font-bold text-lg text-text-main-light dark:text-text-main-dark truncate">Personal Journal</h3>
+</div>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm leading-relaxed line-clamp-3 flex-1">
+                    Today I realized that keeping my thoughts secure is more important than ever. The internet feels like a...
+                </p>
+<div class="mt-4 pt-4 border-t border-border-light/50 dark:border-border-dark/50 flex items-center justify-between">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Modified 1d ago</span>
+<!-- Active Menu Trigger -->
+<button class="relative p-1 rounded-md bg-background-light dark:bg-background-dark text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<!-- Popover Menu -->
+<div class="absolute right-4 bottom-12 w-32 bg-surface-light dark:bg-surface-dark rounded-lg shadow-lg border border-border-light dark:border-border-dark py-1 z-10 animate-in fade-in zoom-in-95 duration-100 origin-bottom-right">
+<a class="flex items-center gap-2 px-3 py-2 text-sm text-text-main-light dark:text-text-main-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                        Edit
+                    </a>
+<a class="flex items-center gap-2 px-3 py-2 text-sm text-text-main-light dark:text-text-main-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+                        Share
+                    </a>
+<div class="h-px bg-border-light dark:bg-border-dark my-1"></div>
+<a class="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" href="#">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+                        Delete
+                    </a>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-5 shadow-sm hover:shadow-md hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-200 cursor-pointer flex flex-col h-[200px]">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-teal text-[18px]" title="Encrypted">lock</span>
+<h3 class="font-bold text-lg text-text-main-light dark:text-text-main-dark truncate">Crypto Wallet Backup</h3>
+</div>
+</div>
+<div class="flex-1 bg-background-light dark:bg-background-dark/50 rounded p-2 mb-2 font-mono text-xs text-text-sub-light dark:text-text-sub-dark break-all">
+                    0x71C7656EC7ab88b098defB751B7401B5f6d8976F
+                </div>
+<div class="mt-auto pt-2 border-t border-border-light/50 dark:border-border-dark/50 flex items-center justify-between">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Modified 3d ago</span>
+<button class="p-1 rounded-md text-text-sub-light dark:text-text-sub-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-5 shadow-sm hover:shadow-md hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-200 cursor-pointer flex flex-col h-[200px]">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-teal text-[18px]" title="Encrypted">lock</span>
+<h3 class="font-bold text-lg text-text-main-light dark:text-text-main-dark truncate">Travel Plans 2024</h3>
+</div>
+</div>
+<ul class="text-text-sub-light dark:text-text-sub-dark text-sm leading-relaxed flex-1 list-disc list-inside">
+<li>Passport photos scan</li>
+<li>Flight confirmation: #XJ992</li>
+<li>Hotel booking ref</li>
+</ul>
+<div class="mt-4 pt-4 border-t border-border-light/50 dark:border-border-dark/50 flex items-center justify-between">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Modified 1w ago</span>
+<button class="p-1 rounded-md text-text-sub-light dark:text-text-sub-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-5 shadow-sm hover:shadow-md hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-200 cursor-pointer flex flex-col h-[200px]">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-accent-teal text-[18px]" title="Encrypted">lock</span>
+<h3 class="font-bold text-lg text-text-main-light dark:text-text-main-dark truncate">Gift Ideas</h3>
+</div>
+</div>
+<p class="text-text-sub-light dark:text-text-sub-dark text-sm leading-relaxed line-clamp-3 flex-1">
+                    Mom: Gardening set, new gloves. Dad: Vintage record player or maybe just a nice bottle of...
+                </p>
+<div class="mt-4 pt-4 border-t border-border-light/50 dark:border-border-dark/50 flex items-center justify-between">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Modified 2w ago</span>
+<button class="p-1 rounded-md text-text-sub-light dark:text-text-sub-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group relative bg-surface-light dark:bg-surface-dark rounded-xl border border-dashed border-border-light dark:border-border-dark hover:border-accent-teal hover:bg-accent-teal/5 dark:hover:bg-accent-teal/10 p-5 transition-all duration-200 cursor-pointer flex flex-col h-[200px] items-center justify-center text-center gap-3">
+<div class="size-12 rounded-full bg-accent-teal/10 text-accent-teal flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</div>
+<h3 class="font-semibold text-text-main-light dark:text-text-main-dark">Create New Note</h3>
+</div>
+</div>
+</main>
+<!-- Footer for visual balance -->
+<footer class="mt-auto py-8 text-center text-xs text-text-sub-light dark:text-text-sub-dark border-t border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark">
+<div class="flex justify-center gap-4 mb-2">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">lock</span> End-to-end encrypted</span>
+<span>•</span>
+<span>Zero-knowledge architecture</span>
+</div>
+<p>© 2024 Secure Notes Inc. All rights reserved.</p>
+</footer>
+</body></html>

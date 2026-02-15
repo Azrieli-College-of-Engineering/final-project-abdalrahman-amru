@@ -21,10 +21,10 @@ export default function CryptoTest() {
       const key = await deriveKey(password, salt);
       
       // Encrypt
-      const encrypted = await encryptNote(plaintext, key, userId, noteId);
+      const encrypted = await encryptNote(plaintext, key, userId);
       
       // Decrypt
-      const decrypted = await decryptNote(encrypted, key, userId, noteId);
+      const decrypted = await decryptNote(encrypted, key, userId);
       
       // Verify
       if (decrypted === plaintext) {
@@ -64,7 +64,7 @@ export default function CryptoTest() {
       const key = await deriveKey(password, salt);
       
       // Encrypt
-      const encrypted = await encryptNote(plaintext, key, userId, noteId);
+      const encrypted = await encryptNote(plaintext, key, userId);
       
       // Tamper with ciphertext
       const tamperedCiphertext = encrypted.ciphertext.slice(0, -5) + 'AAAAA';
@@ -74,8 +74,7 @@ export default function CryptoTest() {
         await decryptNote(
           { ...encrypted, ciphertext: tamperedCiphertext },
           key,
-          userId,
-          noteId
+          userId
         );
         setResult('❌ FAILED: Tampering was not detected!');
       } catch (error) {
@@ -111,11 +110,11 @@ export default function CryptoTest() {
       const key2 = await deriveKey(password2, salt);
       
       // Encrypt with key1
-      const encrypted = await encryptNote(plaintext, key1, userId, noteId);
+      const encrypted = await encryptNote(plaintext, key1, userId);
       
       // Try to decrypt with key2
       try {
-        await decryptNote(encrypted, key2, userId, noteId);
+        await decryptNote(encrypted, key2, userId);
         setResult('❌ FAILED: Wrong key was accepted!');
       } catch (error) {
         const err = error as Error;

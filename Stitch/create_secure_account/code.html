@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Secure Account - Secure Notes</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
+<!-- Header / Navigation -->
+<header class="w-full border-b border-[#f0f2f4] dark:border-[#22303c] bg-white dark:bg-[#111a22] px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-size: 20px;">lock</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">Secure Notes</h2>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium text-[#617589] dark:text-[#9ba8b8] hidden sm:block">Already have an account?</span>
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-transparent border border-[#dbe0e6] dark:border-[#334454] text-[#111418] dark:text-white text-sm font-bold hover:bg-[#f0f2f4] dark:hover:bg-[#1a2632] transition-colors">
+        Log In
+      </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center px-4 py-12 w-full">
+<div class="w-full max-w-[480px] flex flex-col gap-6">
+<!-- Headings -->
+<div class="text-center space-y-2">
+<h1 class="text-3xl font-bold tracking-tight text-[#111418] dark:text-white">Create your Secure Vault</h1>
+<p class="text-[#617589] dark:text-[#9ba8b8] text-base font-normal">
+          Zero-knowledge encryption means only you can access your data.
+        </p>
+</div>
+<!-- Warning Box -->
+<div class="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900/30 p-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-600 dark:text-amber-500 shrink-0 mt-0.5">warning</span>
+<div class="flex flex-col gap-1">
+<p class="text-amber-900 dark:text-amber-200 text-sm font-bold">Important Security Notice</p>
+<p class="text-amber-800 dark:text-amber-300/80 text-sm leading-relaxed">
+              We cannot recover or reset your Master Password. If you lose it, your data is lost forever because we do not store your keys.
+            </p>
+</div>
+</div>
+</div>
+<!-- Registration Form -->
+<form class="flex flex-col gap-5 bg-white dark:bg-[#111a22] p-6 sm:p-8 rounded-2xl border border-[#dbe0e6] dark:border-[#22303c] shadow-sm">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="text-[#111418] dark:text-white text-sm font-medium leading-normal" for="email">Email Address</label>
+<div class="relative">
+<input class="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 px-3 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" id="email" placeholder="name@example.com" type="email"/>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#617589] dark:text-[#6b7280]">
+<span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+</div>
+</div>
+</div>
+<!-- Master Password Field -->
+<div class="space-y-2">
+<label class="text-[#111418] dark:text-white text-sm font-medium leading-normal" for="password">Master Password</label>
+<div class="relative">
+<input class="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 pl-3 pr-10 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" id="password" placeholder="Create a strong master password" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#617589] hover:text-[#111418] dark:text-[#6b7280] dark:hover:text-white transition-colors cursor-pointer" type="button">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility_off</span>
+</button>
+</div>
+<!-- Strength Indicator -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex gap-1 h-1 w-full">
+<div class="h-full w-1/4 rounded-full bg-emerald-500"></div>
+<div class="h-full w-1/4 rounded-full bg-emerald-500"></div>
+<div class="h-full w-1/4 rounded-full bg-[#dbe0e6] dark:bg-[#334454]"></div>
+<div class="h-full w-1/4 rounded-full bg-[#dbe0e6] dark:bg-[#334454]"></div>
+</div>
+<p class="text-xs text-[#617589] dark:text-[#9ba8b8]">Strength: <span class="text-emerald-600 dark:text-emerald-400 font-medium">Good</span></p>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-2">
+<label class="text-[#111418] dark:text-white text-sm font-medium leading-normal" for="confirm-password">Confirm Master Password</label>
+<div class="relative">
+<input class="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 pl-3 pr-10 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" id="confirm-password" placeholder="Re-enter your master password" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#617589] hover:text-[#111418] dark:text-[#6b7280] dark:hover:text-white transition-colors cursor-pointer" type="button">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Terms Checkbox -->
+<div class="flex items-start gap-3 py-1">
+<div class="flex items-center h-5">
+<input aria-describedby="terms-description" class="w-4 h-4 border border-[#dbe0e6] rounded bg-white focus:ring-3 focus:ring-primary/30 dark:bg-[#1a2632] dark:border-[#334454] dark:focus:ring-primary/60 dark:ring-offset-gray-800 text-primary" id="terms" type="checkbox"/>
+</div>
+<div class="text-sm">
+<label class="font-medium text-[#111418] dark:text-white" for="terms">I accept the Terms and Conditions</label>
+<p class="text-[#617589] dark:text-[#9ba8b8]" id="terms-description">By creating an account, you agree to our <a class="text-primary hover:underline" href="#">Terms of Service</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>.</p>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary hover:bg-primary/90 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-md shadow-primary/20 transition-all active:scale-[0.98]" type="submit">
+          Create Account
+        </button>
+</form>
+<!-- Footer Help -->
+<div class="text-center">
+<p class="text-sm text-[#617589] dark:text-[#9ba8b8]">
+          Need help? <a class="font-semibold text-primary hover:text-primary/80 transition-colors" href="#">Visit our Support Center</a>
+</p>
+</div>
+</div>
+</main>
+<script>
+    // Simple script to toggle dark mode for demonstration
+    // In a real app, this would be handled by system preference or a toggle switch
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+    }
+  </script>
+</body></html>

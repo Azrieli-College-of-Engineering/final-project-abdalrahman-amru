@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Notes - Integrity Failure</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white min-h-screen flex flex-col overflow-hidden">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e5e7eb] dark:border-[#2a3441] bg-white dark:bg-[#1a232e] px-6 py-3 shrink-0 z-20">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-[#111418] dark:text-white">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">lock_open</span>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Secure Notes</h2>
+</div>
+<!-- Search Bar (Disabled Visual Cue) -->
+<label class="hidden md:flex flex-col min-w-40 !h-10 w-64 opacity-50 cursor-not-allowed">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full border border-[#d1d5db] dark:border-[#374151]">
+<div class="text-[#6b7280] flex bg-[#f9fafb] dark:bg-[#1f2937] items-center justify-center pl-3 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#f9fafb] dark:bg-[#1f2937] focus:border-none h-full placeholder:text-[#9ca3af] px-3 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal cursor-not-allowed" disabled="" placeholder="Search encrypted notes..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex items-center justify-end gap-4">
+<div class="flex gap-3">
+<!-- Save Button (Disabled) -->
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 text-sm font-bold leading-normal tracking-[0.015em] cursor-not-allowed select-none transition-colors" disabled="">
+<span class="material-symbols-outlined text-[18px] mr-2">save</span>
+<span class="truncate">Save</span>
+</button>
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[#111418] dark:text-white text-sm font-medium leading-normal transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
+<span class="truncate">Log Out</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 ring-2 ring-white dark:ring-[#1a232e]" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyPNc-QSNtlCqHD5b9q14siky1WdokB4mQXyS30gIqirySZFcjpO1Z4an_KIXnza8LvwBUy2EGDqf6idP759jFaXIqpQDzpA6sA-TdT6OdsscGZ4tGRMw1nW2JGJmrs55gxYG76OjxMURPdJ4wP_Ca-v_TAMK_GA9FVQ-B2wez_6UsIcUZJwS19VYT-Nn_PvOp-2nvPU1tTeZOf54DZ9xhXZLwNn-kZIFJ5JbdYo6IqPBazE3YyjgpcXAl6GIER4x3yvnRYf3UTTkA");'></div>
+</div>
+</header>
+<div class="flex flex-1 h-full overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="hidden md:flex flex-col w-72 border-r border-[#e5e7eb] dark:border-[#2a3441] bg-white dark:bg-[#1a232e] flex-shrink-0">
+<div class="p-4">
+<button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white h-10 rounded-lg font-medium transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    New Note
+                </button>
+</div>
+<div class="flex-1 overflow-y-auto px-2 pb-4 space-y-1">
+<div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">My Vault</div>
+<!-- Normal Note Item -->
+<a class="flex flex-col gap-1 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#252f3e] transition-colors group" href="#">
+<div class="flex items-center justify-between">
+<span class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">Quarterly Financials</span>
+<span class="text-xs text-gray-400">2h ago</span>
+</div>
+<p class="text-xs text-gray-500 truncate">Review Q3 earnings and prepare slides for...</p>
+</a>
+<!-- Normal Note Item -->
+<a class="flex flex-col gap-1 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#252f3e] transition-colors group" href="#">
+<div class="flex items-center justify-between">
+<span class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">Server Configs</span>
+<span class="text-xs text-gray-400">Yesterday</span>
+</div>
+<p class="text-xs text-gray-500 truncate">SSH keys and IP whitelisting rules for...</p>
+</a>
+<!-- Active / Tampered Note Item -->
+<div class="relative flex flex-col gap-1 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 cursor-pointer">
+<div class="absolute right-2 top-2 size-2 rounded-full bg-red-500 animate-pulse"></div>
+<div class="flex items-center gap-2 text-red-700 dark:text-red-400">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span class="font-bold text-sm truncate">Project Omega Keys</span>
+</div>
+<p class="text-xs text-red-600/70 dark:text-red-400/70 mt-1">Integrity Check Failed</p>
+</div>
+<!-- Normal Note Item -->
+<a class="flex flex-col gap-1 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#252f3e] transition-colors group" href="#">
+<div class="flex items-center justify-between">
+<span class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">Personal Journal</span>
+<span class="text-xs text-gray-400">Oct 24</span>
+</div>
+<p class="text-xs text-gray-500 truncate">Reflecting on the goals for next year...</p>
+</a>
+</div>
+<div class="p-4 border-t border-[#e5e7eb] dark:border-[#2a3441]">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area: Editor -->
+<main class="flex-1 flex flex-col relative bg-background-light dark:bg-background-dark">
+<!-- Toolbar (Disabled State) -->
+<div class="h-12 border-b border-[#e5e7eb] dark:border-[#2a3441] bg-white dark:bg-[#1a232e] flex items-center px-4 gap-2 opacity-50 pointer-events-none select-none">
+<span class="material-symbols-outlined text-gray-400 text-[20px] p-2">format_bold</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px] p-2">format_italic</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px] p-2">format_underlined</span>
+<div class="h-4 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+<span class="material-symbols-outlined text-gray-400 text-[20px] p-2">list</span>
+<span class="material-symbols-outlined text-gray-400 text-[20px] p-2">format_list_numbered</span>
+</div>
+<!-- Content Area with Warning Overlay -->
+<div class="flex-1 relative p-8 md:p-12 flex flex-col items-center justify-center overflow-y-auto">
+<!-- Background visual noise to suggest hidden content (Optional, kept subtle) -->
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05] pointer-events-none"></div>
+<!-- Warning Card -->
+<div class="relative w-full max-w-2xl bg-white dark:bg-[#1a232e] rounded-xl shadow-2xl border border-red-100 dark:border-red-900/30 overflow-hidden">
+<!-- Top red bar -->
+<div class="h-2 w-full bg-red-600"></div>
+<div class="p-8 md:p-10 flex flex-col items-center text-center">
+<!-- Icon -->
+<div class="size-20 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center mb-6 ring-1 ring-red-100 dark:ring-red-900/40">
+<span class="material-symbols-outlined text-red-600 dark:text-red-500 text-[40px]">gpp_bad</span>
+</div>
+<h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">INTEGRITY CHECK FAILED</h1>
+<p class="text-base text-gray-600 dark:text-gray-300 max-w-lg mb-8 leading-relaxed">
+                            This note appears to be tampered with. The server-side data does not match your local encryption keys. Access is blocked for your protection to prevent potential execution of malicious code.
+                        </p>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+<button class="flex items-center justify-center gap-2 h-11 px-6 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-[#1a232e]">
+<span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                                Delete Local Cache
+                            </button>
+<button class="flex items-center justify-center gap-2 h-11 px-6 rounded-lg bg-white dark:bg-[#252f3e] border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#2f3b4d] text-gray-700 dark:text-gray-200 font-medium transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                                Return to Dashboard
+                            </button>
+</div>
+<!-- Technical Details Collapsible (Simulated) -->
+<div class="mt-10 w-full pt-6 border-t border-gray-100 dark:border-gray-800">
+<details class="group text-left">
+<summary class="flex items-center justify-center gap-2 cursor-pointer text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary transition-colors select-none list-none">
+<span>Technical Details</span>
+<span class="material-symbols-outlined text-[18px] transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-4 p-4 bg-gray-50 dark:bg-[#111827] rounded-lg border border-gray-200 dark:border-gray-800 text-left">
+<div class="flex items-start gap-3 mb-3">
+<span class="material-symbols-outlined text-gray-400 text-[20px] mt-0.5">terminal</span>
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-gray-500 uppercase">Expected Hash (Local)</span>
+<span class="text-[10px] px-2 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">Verified</span>
+</div>
+<code class="text-xs font-mono text-gray-600 dark:text-gray-400 break-all bg-white dark:bg-black/20 p-2 rounded border border-gray-200 dark:border-gray-700">sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-red-500 text-[20px] mt-0.5">error</span>
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-red-500 uppercase">Received Hash (Server)</span>
+<span class="text-[10px] px-2 py-0.5 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">Mismatch</span>
+</div>
+<code class="text-xs font-mono text-red-600 dark:text-red-400 break-all bg-red-50 dark:bg-red-900/10 p-2 rounded border border-red-100 dark:border-red-900/30">sha256:87192bc9320984c17826359871624c9192847c19192461874619476129846179</code>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="text-xs font-medium text-primary hover:underline flex items-center gap-1">
+                                            Download Incident Report
+                                            <span class="material-symbols-outlined text-[14px]">download</span>
+</button>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+<!-- Footer note -->
+<p class="mt-6 text-xs text-gray-400 dark:text-gray-600 max-w-md text-center">
+                    Secure Notes Zero-Knowledge Architecture v2.4.1 • ID: 9481-SAFE-GUARD
+                </p>
+</div>
+</main>
+</div>
+</body></html>
