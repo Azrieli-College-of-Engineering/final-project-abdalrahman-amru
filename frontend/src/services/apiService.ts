@@ -73,6 +73,16 @@ export interface RegisterResponse {
   userId: number;
 }
 
+export interface ChangePasswordData {
+  currentPasswordVerifier: string;
+  newPasswordVerifier: string;
+  newSaltLogin: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+}
+
 export const authAPI = {
   register: (data: RegisterData): Promise<RegisterResponse> =>
     apiRequest<RegisterResponse>('/auth/register', {
@@ -83,6 +93,15 @@ export const authAPI = {
   login: (data: LoginData): Promise<AuthResponse> =>
     apiRequest<AuthResponse>('/auth/login', {
       method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  changePassword: (token: string, data: ChangePasswordData): Promise<ChangePasswordResponse> =>
+    apiRequest<ChangePasswordResponse>('/auth/change-password', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(data),
     }),
 };

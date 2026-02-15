@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
 import { authAPI } from '../../services/apiService';
 import { deriveKey, generateSalt, arrayBufferToBase64 } from '../../services/cryptoService';
 
@@ -13,6 +14,7 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   // Calculate password strength
   const getPasswordStrength = (pwd: string): { level: number; label: string; color: string } => {
@@ -88,201 +90,276 @@ export default function Register() {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
-      {/* Header / Navigation */}
-      <header className="w-full border-b border-[#f0f2f4] dark:border-[#22303c] bg-white dark:bg-[#111a22] px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-white">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>lock</span>
-          </div>
-          <h2 className="text-lg font-bold tracking-tight">Secure Notes</h2>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm font-medium text-[#617589] dark:text-[#9ba8b8] hidden sm:block">
-            Already have an account?
-          </span>
-          <Link
-            to="/login"
-            className="flex items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-transparent border border-[#dbe0e6] dark:border-[#334454] text-[#111418] dark:text-white text-sm font-bold hover:bg-[#f0f2f4] dark:hover:bg-[#1a2632] transition-colors"
-          >
-            Log In
-          </Link>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 w-full">
-        <div className="w-full max-w-[480px] flex flex-col gap-6">
-          {/* Headings */}
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight text-[#111418] dark:text-white">
-              Create your Secure Vault
-            </h1>
-            <p className="text-[#617589] dark:text-[#9ba8b8] text-base font-normal">
-              Zero-knowledge encryption means only you can access your data.
-            </p>
-          </div>
-
-          {/* Warning Box */}
-          <div className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900/30 p-4">
-            <div className="flex items-start gap-3">
-              <span className="material-symbols-outlined text-amber-600 dark:text-amber-500 shrink-0 mt-0.5">
-                warning
+    <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4 relative">
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/80 dark:hover:bg-white/10 transition-colors text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary z-10"
+        aria-label="Toggle theme"
+      >
+        <span className="material-symbols-outlined text-[24px]">
+          {theme === 'light' ? 'dark_mode' : 'light_mode'}
+        </span>
+      </button>
+      
+      {/* Main Card Container */}
+      <div className="w-full max-w-[1000px] bg-white dark:bg-[#1a2632] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        {/* Left Panel: Value Proposition */}
+        <div className="w-full md:w-5/12 bg-slate-50 dark:bg-[#15202b] p-8 md:p-12 flex flex-col justify-between relative border-r border-gray-100 dark:border-gray-800">
+          {/* Background Decorative Element */}
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-blue-400"></div>
+          
+          <div className="flex flex-col gap-8">
+            {/* Brand */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-2xl">lock</span>
+              </div>
+              <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-display">
+                Secure Notes
               </span>
-              <div className="flex flex-col gap-1">
-                <p className="text-amber-900 dark:text-amber-200 text-sm font-bold">
-                  Important Security Notice
-                </p>
-                <p className="text-amber-800 dark:text-amber-300/80 text-sm leading-relaxed">
-                  We cannot recover or reset your Master Password. If you lose it, your data is lost forever 
-                  because we do not store your keys.
-                </p>
+            </div>
+
+            {/* Headline */}
+            <div className="mt-4">
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight mb-3">
+                Total privacy for your thoughts.
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
+                Zero-knowledge encryption means we can't read your notes even if we wanted to.
+              </p>
+            </div>
+
+            {/* Features List */}
+            <div className="space-y-4 mt-4">
+              <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-sm font-bold">check</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Client-side encryption</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Data is encrypted on your device before it ever reaches our servers.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-sm font-bold">check</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">No data access</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    We don't store your master password, so we can never access your vault.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-sm font-bold">check</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Open Source</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Our cryptography code is open for anyone to audit and verify.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-              <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
-            </div>
-          )}
+          <div className="mt-12 text-sm text-slate-400 dark:text-slate-500">
+            © 2024 Secure Notes Inc.
+          </div>
+        </div>
 
-          {/* Registration Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-5 bg-white dark:bg-[#111a22] p-6 sm:p-8 rounded-2xl border border-[#dbe0e6] dark:border-[#22303c] shadow-sm"
-          >
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label
-                className="text-[#111418] dark:text-white text-sm font-medium leading-normal"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <div className="relative">
+        {/* Right Panel: Registration Form */}
+        <div className="w-full md:w-7/12 p-8 md:p-16 flex flex-col justify-center bg-white dark:bg-[#1a2632]">
+          <div className="max-w-[420px] w-full mx-auto">
+            <div className="mb-10">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 font-display">
+                Create your vault
+              </h2>
+              <p className="text-slate-500 dark:text-slate-400">
+                Start protecting your notes with zero-knowledge encryption.
+              </p>
+            </div>
+
+            {/* Warning Box */}
+            <div className="mb-6 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-amber-600 dark:text-amber-500 text-xl mt-0.5">
+                  warning
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-200 mb-1">
+                    Important: Save your password!
+                  </p>
+                  <p className="text-xs text-amber-800 dark:text-amber-300/80 leading-relaxed">
+                    We cannot recover your password. If you lose it, your data is lost forever.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              {/* Email Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300" htmlFor="email">
+                  Email
+                </label>
                 <input
-                  className="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 px-3 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-[#15202b] text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   id="email"
-                  placeholder="name@example.com"
                   type="email"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLoading}
                 />
-                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#617589] dark:text-[#6b7280]">
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>mail</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Master Password Field */}
-            <div className="space-y-2">
-              <label
-                className="text-[#111418] dark:text-white text-sm font-medium leading-normal"
-                htmlFor="password"
-              >
-                Master Password
-              </label>
-              <div className="relative">
-                <input
-                  className="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 pl-3 pr-10 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  id="password"
-                  placeholder="Create a strong master password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <button
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#617589] hover:text-[#111418] dark:text-[#6b7280] dark:hover:text-white transition-colors cursor-pointer"
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-                    {showPassword ? 'visibility_off' : 'visibility'}
-                  </span>
-                </button>
               </div>
 
-              {/* Strength Indicator */}
-              {password && (
-                <div className="flex flex-col gap-1.5 pt-1">
-                  <div className="flex gap-1 h-1 w-full">
-                    {[1, 2, 3, 4].map((level) => (
-                      <div
-                        key={level}
-                        className={`h-full w-1/4 rounded-full ${
-                          level <= passwordStrength.level
-                            ? `bg-${passwordStrength.color}-500`
-                            : 'bg-[#dbe0e6] dark:bg-[#334454]'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-xs text-[#617589] dark:text-[#9ba8b8]">
-                    Strength: <span className={`text-${passwordStrength.color}-600 dark:text-${passwordStrength.color}-400 font-medium`}>
-                      {passwordStrength.label}
+              {/* Master Password Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300" htmlFor="password">
+                  Master Password
+                </label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-[#15202b] text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Create a strong master password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    tabIndex={-1}
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      {showPassword ? 'visibility_off' : 'visibility'}
                     </span>
-                  </p>
+                  </button>
                 </div>
-              )}
-            </div>
 
-            {/* Confirm Password Field */}
-            <div className="space-y-2">
-              <label
-                className="text-[#111418] dark:text-white text-sm font-medium leading-normal"
-                htmlFor="confirmPassword"
-              >
-                Confirm Master Password
-              </label>
-              <div className="relative">
-                <input
-                  className="flex w-full rounded-lg border border-[#dbe0e6] dark:border-[#334454] bg-white dark:bg-[#1a2632] h-11 pl-3 pr-10 py-2 text-sm text-[#111418] dark:text-white placeholder:text-[#617589] dark:placeholder:text-[#6b7280] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  id="confirmPassword"
-                  placeholder="Re-enter your password"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <button
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#617589] hover:text-[#111418] dark:text-[#6b7280] dark:hover:text-white transition-colors cursor-pointer"
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  tabIndex={-1}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-                    {showConfirmPassword ? 'visibility_off' : 'visibility'}
-                  </span>
-                </button>
+                {/* Strength Indicator */}
+                {password && (
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <div className="flex gap-1 h-1 w-full">
+                      {[1, 2, 3, 4].map((level) => (
+                        <div
+                          key={level}
+                          className={`h-full w-1/4 rounded-full transition-colors ${
+                            level <= passwordStrength.level
+                              ? passwordStrength.color === 'red'
+                                ? 'bg-red-500'
+                                : passwordStrength.color === 'emerald'
+                                ? 'bg-emerald-500'
+                                : 'bg-green-500'
+                              : 'bg-slate-200 dark:bg-gray-700'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      Strength:{' '}
+                      <span
+                        className={`font-medium ${
+                          passwordStrength.color === 'red'
+                            ? 'text-red-600 dark:text-red-400'
+                            : passwordStrength.color === 'emerald'
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : 'text-green-600 dark:text-green-400'
+                        }`}
+                      >
+                        {passwordStrength.label}
+                      </span>
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex items-center justify-center h-11 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold px-6 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-            >
-              {isLoading ? (
-                <>
-                  <span className="material-symbols-outlined animate-spin text-xl mr-2">progress_activity</span>
-                  <span>Creating Account...</span>
-                </>
-              ) : (
-                'Create Secure Account'
-              )}
-            </button>
-          </form>
+              {/* Confirm Password Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300" htmlFor="confirmPassword">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-[#15202b] text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Re-enter your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    tabIndex={-1}
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full mt-4 px-6 py-3.5 rounded-lg bg-primary hover:bg-primary/90 text-white font-semibold text-base shadow-lg shadow-primary/30 transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span>
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <span>Create Account</span>
+                )}
+              </button>
+
+              {/* Login Link */}
+              <div className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  className="text-primary hover:underline font-semibold"
+                >
+                  Log in
+                </Link>
+              </div>
+            </form>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

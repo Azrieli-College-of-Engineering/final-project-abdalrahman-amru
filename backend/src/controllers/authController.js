@@ -112,4 +112,62 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, login };
+/**
+ * Change user password
+ * @route PUT /api/auth/change-password
+ */
+async function changePassword(req, res) {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { currentPasswordVerifier, newPasswordVerifier, newSaltLogin } = req.body;
+    const userId = req.userId; // from JWT middleware
+    
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Verify current password
+    const validPassword = await bcrypt.compare(
+      currentPasswordVerifier,
+      user.passwordVerifier
+    );
+    
+    if (!validPassword) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+    
+    // Hash new password verifier
+    const hashedNewVerifier = await bcrypt.hash(newPasswordVerifier, 10);
+    
+    // Update user password and salt
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        passwordVerifier: hashedNewVerifier,
+        saltLogin: newSaltLogin
+      }
+    });
+    
+    res.json({
+      message: 'Password changed successfully'
+    });
+    
+  } catch (error) {
+    console.error('Password change error:', error);
+    res.status(500).json({ 
+      error: 'Password change failed',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
+
+module.exports = { register, login, changePassword };

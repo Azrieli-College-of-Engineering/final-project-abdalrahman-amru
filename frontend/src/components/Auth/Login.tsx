@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { authAPI } from '../../services/apiService';
 import { deriveKey, base64ToArrayBuffer } from '../../services/cryptoService';
 
@@ -12,6 +13,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -53,7 +55,17 @@ export default function Login() {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+    <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4 relative">
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/80 dark:hover:bg-white/10 transition-colors text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary z-10"
+        aria-label="Toggle theme"
+      >
+        <span className="material-symbols-outlined text-[24px]">
+          {theme === 'light' ? 'dark_mode' : 'light_mode'}
+        </span>
+      </button>
       {/* Main Card Container */}
       <div className="w-full max-w-[1000px] bg-white dark:bg-[#1a2632] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
         {/* Left Panel: Value Proposition */}
