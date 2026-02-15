@@ -29,15 +29,15 @@ export default function CryptoTest() {
       // Verify
       if (decrypted === plaintext) {
         setResult(`✅ SUCCESS!
-        
-Original: ${plaintext}
-Decrypted: ${decrypted}
+                
+        Original: ${plaintext}
+        Decrypted: ${decrypted}
 
-Ciphertext: ${encrypted.ciphertext.slice(0, 50)}...
-IV: ${encrypted.iv}
-Auth Tag: ${encrypted.authTag.slice(0, 30)}...
+        Ciphertext: ${encrypted.ciphertext}
+        IV: ${encrypted.iv}
+        Auth Tag: ${encrypted.authTag}
 
-Salt: ${arrayBufferToBase64(salt as unknown as ArrayBuffer)}`);
+        Salt: ${arrayBufferToBase64(salt as unknown as ArrayBuffer)}`);
       } else {
         setResult('❌ FAILED: Decrypted text does not match');
       }
@@ -82,9 +82,9 @@ Salt: ${arrayBufferToBase64(salt as unknown as ArrayBuffer)}`);
         const err = error as Error;
         setResult(`✅ SUCCESS: Tampering detected!
         
-Error message: ${err.message}
+        Error message: ${err.message}
 
-This proves that any modification to the ciphertext will be detected.`);
+        This proves that any modification to the ciphertext will be detected.`);
       }
       
     } catch (error) {
@@ -121,9 +121,9 @@ This proves that any modification to the ciphertext will be detected.`);
         const err = error as Error;
         setResult(`✅ SUCCESS: Wrong key rejected!
         
-Error message: ${err.message}
+          Error message: ${err.message}
 
-This proves that only the correct key can decrypt the data.`);
+          This proves that only the correct key can decrypt the data.`);
       }
       
     } catch (error) {

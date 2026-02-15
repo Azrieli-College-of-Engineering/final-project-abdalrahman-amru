@@ -1,16 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const { Pool } = require('pg');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const { prisma, pool } = require('./utils/prisma');
 
 const app = express();
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 // Security middleware
 app.use(helmet({
@@ -73,6 +68,10 @@ app.get('/db-health', async (req, res) => {
   }
 });
 
+// Import routes
+const authRoutes = require('./routes/auth');
+const notesRoutes = require('./routes/notes');
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
@@ -81,9 +80,9 @@ app.get('/', (req, res) => {
   });
 });
 
-// Routes will be added here
-// app.use('/api/auth', authRoutes);
-// app.use('/api/notes', notesRoutes);
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/notes', notesRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
