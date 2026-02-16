@@ -40,14 +40,16 @@ In this architecture, "zero-knowledge" means:
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │ │
 │  │  │   UI Layer   │  │ Crypto Layer │  │  API Client      │  │ │
 │  │  │              │  │              │  │                  │  │ │
-│  │  │ • Login      │  │ • PBKDF2     │  │ • Axios/Fetch    │  │ │
+│  │  │ • Login      │  │ • PBKDF2     │  │ • Fetch API      │  │ │
 │  │  │ • Register   │  │ • AES-GCM    │  │ • JWT handling   │  │ │
-│  │  │ • NotesList  │  │ • Key mgmt   │  │ • Error handling │  │ │
-│  │  │ • NoteEditor │  │ • Web Crypto │  │                  │  │ │
+│  │  │ • Dashboard  │  │ • Key mgmt   │  │ • Error handling │  │ │
+│  │  │ • NoteEditor │  │ • Web Crypto │  │ • Type safety    │  │ │
+│  │  │ • Modal      │  │ • Integrity  │  │                  │  │ │
 │  │  └──────────────┘  └──────────────┘  └──────────────────┘  │ │
 │  │                                                            │ │
-│  │  State Management: React Context/Hooks                     │ │
+│  │  State Management: React Context (Auth, Theme)             │ │
 │  │  Key Storage: In-memory only (useRef, no localStorage)     │ │
+│  │  UI Framework: React 18 + TypeScript + Tailwind CSS        │ │
 │  └────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
                                 │

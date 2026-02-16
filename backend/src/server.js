@@ -20,23 +20,60 @@ app.use(helmet({
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
       frameSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+      upgradeInsecureRequests: [],
     },
+    reportOnly: false,
   },
   crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "same-origin" },
+  dnsPrefetchControl: { allow: false },
+  frameguard: { action: 'deny' },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  ieNoOpen: true,
+  noSniff: true,
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  xssFilter: true,
 }));
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Rate limiting
+// CSP violation reporting endpoint
+app.post('/api/csp-violation-report', express.json({ type: 'application/csp-report' }), (req, res) => {
+  if (req.body) {
+    console.error('CSP Violation:', JSON.stringify(req.body, null, 2));
+  }
+  res.status(204).end();
+});
+
+// Rate limiting - General API
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
+
+// Stricter rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 login/register attempts per windowMs
+  message: 'Too many authentication attempts, please try again later.',
+  skipSuccessfulRequests: false,
+});
 
 // Body parsing
 app.use(express.json());
@@ -80,9 +117,51 @@ app.get('/', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
+// API Routes with rate limiting
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/notes', notesRoutes);
+
+// Admin endpoint for tampering simulation (DEV ONLY)
+if (process.env.NODE_ENV === 'development') {
+  app.post('/api/admin/tamper-note/:id', express.json(), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const noteId = parseInt(id);
+      
+      if (isNaN(noteId)) {
+        return res.status(400).json({ error: 'Invalid note ID' });
+      }
+      
+      // Get the note
+      const note = await prisma.note.findUnique({
+        where: { id: noteId }
+      });
+      
+      if (!note) {
+        return res.status(404).json({ error: 'Note not found' });
+      }
+      
+      // Tamper with the ciphertext (flip some bits)
+      const tamperedCiphertext = note.ciphertext.slice(0, -5) + 'XXXXX';
+      
+      // Update the note with tampered data
+      await prisma.note.update({
+        where: { id: noteId },
+        data: { ciphertext: tamperedCiphertext }
+      });
+      
+      res.json({
+        message: 'Note tampered successfully (for testing purposes)',
+        originalCiphertext: note.ciphertext.slice(0, 50) + '...',
+        tamperedCiphertext: tamperedCiphertext.slice(0, 50) + '...'
+      });
+      
+    } catch (error) {
+      console.error('Tamper note error:', error);
+      res.status(500).json({ error: 'Failed to tamper note' });
+    }
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {

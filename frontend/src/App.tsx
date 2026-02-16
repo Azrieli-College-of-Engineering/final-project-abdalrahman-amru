@@ -6,6 +6,8 @@ import Register from './components/Auth/Register';
 import Dashboard from './components/Notes/Dashboard';
 import NoteEditor from './components/Notes/NoteEditor';
 import AccountSettings from './pages/AccountSettings';
+import CryptoTest from './pages/CryptoTest';
+import SecurityTest from './pages/SecurityTest';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -80,6 +82,10 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Test/Demo Routes */}
+            <Route path="/crypto-test" element={<CryptoTest />} />
+            <Route path="/security-test" element={<SecurityTest />} />
 
             {/* Default Route */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />

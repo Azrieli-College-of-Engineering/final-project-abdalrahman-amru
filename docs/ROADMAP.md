@@ -936,24 +936,24 @@ export default function Login() {
 ### Day 11-12: Security Implementation
 
 **Tasks:**
-- [ ] Verify CSP headers in production
-- [ ] Add tamper detection demo page
-- [ ] Create admin endpoint for tampering simulation (dev only)
-- [ ] Test XSS protection (try injecting scripts)
-- [ ] Verify rate limiting works
+- [x] Verify CSP headers in production
+- [x] Add tamper detection demo page
+- [x] Create admin endpoint for tampering simulation (dev only)
+- [x] Test XSS protection (try injecting scripts)
+- [x] Verify rate limiting works
 
 ### Day 13-14: Documentation & Testing
 
 **Tasks:**
-- [ ] Final testing of all features
-- [ ] Record demo video showing:
+- [x] Final testing of all features
+- [x] Record demo video showing:
   - Registration and login
   - Creating encrypted note
   - Viewing database (ciphertext gibberish)
   - Tampering simulation
   - Integrity check failure
-- [ ] Write final project report
-- [ ] Prepare presentation
+- [x] Write final project report
+- [x] Prepare presentation
 
 ---
 

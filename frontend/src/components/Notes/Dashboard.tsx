@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../Layout/Layout';
+import Modal from '../Modal';
 import { notesAPI, type Note } from '../../services/apiService';
 import { decryptNote } from '../../services/cryptoService';
 
@@ -19,6 +20,16 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  
+  // Modal state
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState<{ isOpen: boolean; noteId: number | null }>({
+    isOpen: false,
+    noteId: null,
+  });
+  const [errorModal, setErrorModal] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: '',
+  });
   
   const { user, token, getMasterKey, logout } = useAuth();
   const navigate = useNavigate();
@@ -144,16 +155,28 @@ export default function Dashboard() {
     }
   };
 
-  const handleDeleteNote = async (noteId: number) => {
-    if (!token || !confirm('Are you sure you want to delete this note?')) {
-      return;
-    }
+  const handleDeleteNote = (noteId: number) => {
+    if (!token) return;
+    
+    setDeleteConfirmModal({
+      isOpen: true,
+      noteId,
+    });
+  };
 
+  const confirmDelete = async () => {
+    if (!token || !deleteConfirmModal.noteId) return;
+    
     try {
-      await notesAPI.delete(token, noteId);
-      setNotes(notes.filter((note) => note.id !== noteId));
+      await notesAPI.delete(token, deleteConfirmModal.noteId);
+      setNotes(notes.filter((note) => note.id !== deleteConfirmModal.noteId));
+      setDeleteConfirmModal({ isOpen: false, noteId: null });
     } catch (err: any) {
-      alert('Failed to delete note: ' + err.message);
+      setDeleteConfirmModal({ isOpen: false, noteId: null });
+      setErrorModal({
+        isOpen: true,
+        message: err.message || 'Failed to delete note. Please try again.',
+      });
     }
   };
 
@@ -358,6 +381,28 @@ export default function Dashboard() {
         )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteConfirmModal.isOpen}
+        onClose={() => setDeleteConfirmModal({ isOpen: false, noteId: null })}
+        title="Delete Note"
+        message="Are you sure you want to delete this note? This action cannot be undone."
+        type="confirm"
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={confirmDelete}
+      />
+
+      {/* Error Modal */}
+      <Modal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, message: '' })}
+        title="Error"
+        message={errorModal.message}
+        type="error"
+        confirmText="OK"
+      />
     </Layout>
   );
 }

@@ -55,7 +55,9 @@ This project demonstrates practical implementation of cryptographic principles a
 └─────────────────────────────────────────────────────────┘
 ```
 
-📖 **See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed system design**
+📖 **See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed system design**
+
+📖 **See [COMPONENTS.md](docs/COMPONENTS.md) for component documentation**
 
 ---
 
@@ -64,21 +66,43 @@ This project demonstrates practical implementation of cryptographic principles a
 ### Core Functionality
 
 - ✅ **Client-side AES-256-GCM encryption** – All notes encrypted before leaving browser
-- ✅ **PBKDF2 key derivation** – Strong key generation from master password
+- ✅ **PBKDF2 key derivation** – Strong key generation from master password (100k iterations)
 - ✅ **Zero-knowledge design** – Server and database never see plaintext
 - ✅ **Integrity verification** – Detect tampered data using GCM authentication tags
 - ✅ **JWT authentication** – Secure stateless session management
 - ✅ **CRUD operations** – Create, read, update, delete encrypted notes
+- ✅ **Markdown support** – Rich text editing with live preview
+- ✅ **Dark mode** – System-aware theme switching
+- ✅ **Password change** – Re-encrypt all notes with new key
 
 ### Security Features
 
-- 🔒 **Content Security Policy (CSP)** – XSS attack mitigation
+- 🔒 **Content Security Policy (CSP)** – Comprehensive XSS attack mitigation with all directives
+- 🔒 **Two-tier rate limiting** – General (100 req/15min) + Strict auth (5 req/15min)
 - 🔒 **HTTPS enforcement** – Encrypted transport layer
 - 🔒 **HTTP-only cookies** – Session token protection
-- 🔒 **Rate limiting** – Brute force attack prevention
 - 🔒 **Input validation** – SQL injection and XSS prevention
-- 🔒 **Security headers** – Helmet.js for Express hardening
-- 🔒 **Tamper detection** – Real-time integrity check warnings
+- 🔒 **Security headers** – Helmet.js for Express hardening (HSTS, X-Frame-Options, etc.)
+- 🔒 **Tamper detection** – Real-time integrity check with admin simulation endpoint
+- 🔒 **CORS protection** – Origin-based access control
+- 🔒 **CSP violation reporting** – Server-side violation logging
+
+### User Experience Features
+
+- 🎨 **Modern UI/UX** – Clean, responsive design with Tailwind CSS
+- 🎨 **Modal dialogs** – Beautiful animated modals instead of browser alerts
+- 🎨 **Material icons** – Google Material Symbols throughout
+- 🎨 **Loading states** – User feedback during async operations
+- 🎨 **Auto-save** – Notes automatically save after 2 seconds of inactivity
+- 🎨 **Search** – Real-time note search by title/content
+- 🎨 **Preview mode** – Toggle between edit and preview for Markdown
+
+### Testing & Demonstration
+
+- 🧪 **Security Test Dashboard** – 6 interactive security tests (XSS, CSP, Rate Limiting, etc.)
+- 🧪 **Crypto Test Page** – 3 cryptography demonstrations (Encryption, Tampering, Wrong Key)
+- 🧪 **Terminal-style output** – Developer-friendly test results display
+- 🧪 **Admin tampering endpoint** – Simulate database tampering (dev mode only)
 
 ---
 
@@ -86,10 +110,12 @@ This project demonstrates practical implementation of cryptographic principles a
 
 ### Frontend
 - **React 18** – Modern UI framework with hooks
+- **TypeScript** – Type-safe JavaScript
 - **Web Crypto API** – Native browser cryptography (no external crypto libraries)
 - **React Router** – Client-side routing
-- **Axios** – HTTP client for API communication
 - **Tailwind CSS** – Utility-first styling framework
+- **React Markdown** – Markdown rendering with syntax highlighting
+- **Material Symbols** – Google Material Icons
 - **Vite** – Fast development build tool
 
 ### Backend
@@ -98,8 +124,9 @@ This project demonstrates practical implementation of cryptographic principles a
 - **PostgreSQL** – Relational database
 - **Prisma** – Type-safe ORM with migrations
 - **JWT** – JSON Web Tokens for authentication
+- **bcrypt** – Password hashing
 - **Helmet** – Security headers middleware
-- **express-rate-limit** – Rate limiting
+- **express-rate-limit** – Rate limiting (two-tier)
 - **cors** – Cross-origin resource sharing
 
 ### Development Tools
@@ -118,19 +145,21 @@ secure-notes/
 │   ├── src/
 │   │   ├── components/          # Reusable UI components
 │   │   │   ├── Auth/           # Login, Register
-│   │   │   ├── Notes/          # NotesList, NoteEditor
-│   │   │   └── Security/       # TamperDemo, IntegrityWarning
+│   │   │   ├── Layout/         # Layout, Sidebar, Header, Footer
+│   │   │   ├── Notes/          # Dashboard, NoteEditor, MarkdownToolbar
+│   │   │   └── Modal.tsx       # Reusable modal component (alerts/confirms)
 │   │   ├── pages/              # Page components
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── NotesPage.jsx
-│   │   │   └── SecurityDemo.jsx
+│   │   │   ├── AccountSettings.tsx    # User account management
+│   │   │   ├── CryptoTest.tsx        # Encryption testing page
+│   │   │   ├── SecurityTest.tsx      # Security feature testing
+│   │   │   └── NotFound.tsx          # 404 error page
+│   │   ├── context/            # React Context providers
+│   │   │   ├── AuthContext.tsx      # Authentication state
+│   │   │   └── ThemeContext.tsx     # Dark/light theme
 │   │   ├── services/           # Business logic
-│   │   │   ├── cryptoService.js    # PBKDF2 + AES-GCM
-│   │   │   └── apiService.js       # HTTP requests
-│   │   ├── hooks/              # Custom React hooks
-│   │   │   └── useAuth.js
-│   │   ├── utils/              # Helper functions
-│   │   ├── App.jsx
+│   │   │   ├── cryptoService.ts    # PBKDF2 + AES-GCM
+│   │   │   └── apiService.ts       # HTTP requests
+│   │   ├── App.tsx
 │   │   └── main.jsx
 │   ├── public/
 │   ├── package.json
@@ -145,10 +174,9 @@ secure-notes/
 │   │   │   ├── authController.js
 │   │   │   └── notesController.js
 │   │   ├── middleware/         # Express middleware
-│   │   │   ├── authenticate.js # JWT verification
-│   │   │   ├── rateLimiter.js
-│   │   │   └── validator.js
+│   │   │   └── authenticate.js # JWT verification
 │   │   ├── utils/              # Helper functions
+│   │   │   └── prisma.js       # Prisma client
 │   │   └── server.js           # Express app entry
 │   ├── prisma/
 │   │   ├── schema.prisma       # Database schema
@@ -158,9 +186,16 @@ secure-notes/
 │
 ├── docs/                        # Documentation
 │   ├── ARCHITECTURE.md         # System architecture
-│   ├── SECURITY.md             # Security analysis
-│   ├── API.md                  # API reference
-│   └── SETUP.md                # Setup instructions
+│   ├── SECURITY.md             # Security analysis  
+│   ├── SECURITY_IMPLEMENTATION.md  # Security features guide
+│   ├── TESTING_CHECKLIST.md    # Testing procedures
+│   ├── DEMO_VIDEO_SCRIPT.md    # Demo video guide
+│   ├── FINAL_PROJECT_REPORT.md # Complete project report
+│   ├── PRESENTATION_OUTLINE.md # Presentation slides
+│   ├── ROADMAP.md              # Development phases
+│   ├── SETUP_COMPLETE.md       # Setup instructions
+│   ├── PHASE4_QUICKSTART.md    # Quick start guide
+│   └── PHASE4_DAY13-14_SUMMARY.md # Completion summary
 │
 ├── README.md                    # This file
 └── .gitignore
@@ -231,16 +266,22 @@ cp .env.example .env
 npm run dev
 ```
 
-Frontend will run on `http://localhost:3000`
+Frontend will run on `http://localhost:5173`
 
 ### 4. Access Application
 
 Open your browser and navigate to:
 ```
-http://localhost:3000
+http://localhost:5173
 ```
 
-📖 **For detailed setup instructions, see [docs/SETUP.md](docs/SETUP.md)**
+📍 **Testing Dashboards:**
+- Main Application: `http://localhost:5173`
+- Security Tests: `http://localhost:5173/security-test`
+- Crypto Tests: `http://localhost:5173/crypto-test`
+- Account Settings: `http://localhost:5173/account`
+
+📖 **For detailed setup instructions, see [docs/SETUP_COMPLETE.md](docs/SETUP_COMPLETE.md)**
 
 ---
 
@@ -372,6 +413,8 @@ We provide a tamper simulation feature in the Security Demo page.
 
 📖 **For detailed threat analysis, see [docs/SECURITY.md](docs/SECURITY.md)**
 
+📖 **For security implementation details, see [docs/SECURITY_IMPLEMENTATION.md](docs/SECURITY_IMPLEMENTATION.md)**
+
 ---
 
 ## 🧪 Testing
@@ -420,6 +463,14 @@ npm test -- --coverage
 - [ ] Create note with 10,000 characters – verify encryption speed
 - [ ] Load 50+ notes – verify decryption performance
 - [ ] Test on mobile device/browser
+
+**Testing Dashboards:**
+- [ ] Navigate to `/security-test` and run all 6 security tests
+- [ ] Navigate to `/crypto-test` and run all 3 cryptography tests
+- [ ] Verify terminal-style output displays correctly
+- [ ] Check that tests provide clear pass/fail results
+
+📖 **For comprehensive testing guide, see [docs/TESTING_CHECKLIST.md](docs/TESTING_CHECKLIST.md)**
 
 ---
 
@@ -559,7 +610,7 @@ Authorization: Bearer <jwt_token>
 Response: 204 No Content
 ```
 
-📖 **For complete API reference, see [docs/API.md](docs/API.md)**
+📖 **For complete API reference, see [docs/FINAL_PROJECT_REPORT.md](docs/FINAL_PROJECT_REPORT.md#api-endpoints)**
 
 ---
 
@@ -734,9 +785,11 @@ The primary goal is education and demonstration of security concepts, not produc
 ## 📞 Support
 
 For questions about this project:
-- Review the [ARCHITECTURE.md](ARCHITECTURE.md) and [SECURITY.md](docs/SECURITY.md) documentation
-- Check [docs/SETUP.md](docs/SETUP.md) for setup troubleshooting
-- Refer to the [API documentation](docs/API.md)
+- Review the [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [SECURITY.md](docs/SECURITY.md) documentation
+- Check [COMPONENTS.md](docs/COMPONENTS.md) for component details
+- Check [SETUP_COMPLETE.md](docs/SETUP_COMPLETE.md) for setup troubleshooting
+- Refer to the [FINAL_PROJECT_REPORT.md](docs/FINAL_PROJECT_REPORT.md) for comprehensive documentation
+- See [CHANGELOG.md](docs/CHANGELOG.md) for recent updates
 
 ---
 

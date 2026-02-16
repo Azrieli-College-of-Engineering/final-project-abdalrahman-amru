@@ -56,9 +56,9 @@ export default function Sidebar() {
         </Link>
 
         <Link
-          to="/security"
+          to="/security-test"
           className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-            isActive('/security')
+            isActive('/security-test')
               ? 'bg-primary/10 text-primary'
               : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
@@ -66,7 +66,21 @@ export default function Sidebar() {
           <span className="material-symbols-outlined text-[22px]">
             security
           </span>
-          <span className="font-medium">Security Demo</span>
+          <span className="font-medium">Security Tests</span>
+        </Link>
+
+        <Link
+          to="/crypto-test"
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+            isActive('/crypto-test')
+              ? 'bg-primary/10 text-primary'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <span className="material-symbols-outlined text-[22px]">
+            vpn_key
+          </span>
+          <span className="font-medium">Crypto Tests</span>
         </Link>
 
         <Link
